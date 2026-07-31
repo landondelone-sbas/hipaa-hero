@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HIPAA Hero — Annual Compliance Challenge</title>
+<meta name="description" content="Retro arcade HIPAA compliance trainer for clinic staff. Static, offline-capable, no login required.">
+
+<!-- Pixel fonts. If the network is unavailable the monospace fallbacks in
+     styles.css take over and the app remains fully usable. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/arcade.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- Ambience -->
+<div class="starfield" aria-hidden="true"></div>
+<div class="crt-overlay" aria-hidden="true"></div>
+
+<!-- Screen-reader announcements -->
+<div id="live-region" class="sr-only" role="status" aria-live="polite"></div>
+
+<!-- Achievement toasts -->
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+
+<main class="cabinet">
+
+  <!-- ==================== HOME ==================== -->
+  <section class="screen is-active" id="screen-home">
+    <div class="title-block">
+      <h1 class="game-title">HIPAA<br>HERO</h1>
+      <div class="game-subtitle blink">ANNUAL COMPLIANCE CHALLENGE</div>
+    </div>
+
+    <div class="panel panel-purple" style="margin-bottom:24px">
+      <div class="row-between">
+        <div>
+          <div class="label">PLAYER</div>
+          <div class="pixel text-blue" id="home-name" style="font-size:var(--fs-label);margin-top:6px">GUEST</div>
+        </div>
+        <div class="pixel" id="home-status" style="font-size:var(--fs-label)">STATUS</div>
+      </div>
+
+      <div class="grid-2" style="margin-top:20px">
+        <div class="stat-cell">
+          <span class="label">MODULES</span>
+          <span class="stat-val" id="home-modules">0 / 10</span>
+        </div>
+        <div class="stat-cell">
+          <span class="label">BEST EXAM</span>
+          <span class="stat-val" id="home-best">0%</span>
+        </div>
+        <div class="stat-cell">
+          <span class="label">HIGH SCORE</span>
+          <span class="stat-val" id="home-points">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <button class="btn btn-lg btn-block btn-green attract" data-go="instructions">▶ START TRAINING</button>
+      <div class="grid-2">
+        <button class="btn btn-block" id="start-practice">PRACTICE QUIZ</button>
+        <button class="btn btn-block btn-yellow" id="start-exam">FINAL EXAM</button>
+        <button class="btn btn-block btn-purple" data-go="glossary">GLOSSARY</button>
+        <button class="btn btn-block btn-purple" data-go="achievements">ACHIEVEMENTS</button>
+      </div>
+      <button class="btn btn-block btn-ghost" data-go="settings">SETTINGS</button>
+    </div>
+
+    <footer class="site-footer">
+      <div class="logo-slot" aria-hidden="true">CLINIC<br>LOGO</div>
+      <div>Version <span class="app-version">1.0.0</span></div>
+      <div style="margin-top:8px">Created By Sbas info LLC 2026</div>
+    </footer>
+  </section>
+
+  <!-- ==================== INSTRUCTIONS ==================== -->
+  <section class="screen" id="screen-instructions">
+    <h1 class="text-yellow" style="margin-bottom:20px">HOW TO PLAY</h1>
+
+    <div class="panel stack">
+      <div>
+        <h2 class="text-blue">PURPOSE</h2>
+        <p style="margin-top:12px">This is your annual HIPAA compliance refresher. It covers the Privacy Rule,
+        the Security Rule, the Breach Notification Rule, and our clinic's own reporting procedures — the
+        material an OCR auditor expects every workforce member to know.</p>
+      </div>
+
+      <div class="panel-inset">
+        <h2 class="text-green">THE RUN</h2>
+        <ul class="tight" style="margin-top:12px">
+          <li><strong class="text-blue">TRAINING MODULES</strong> — <span id="module-count">10</span> modules
+              of learning cards, each ending in a short mini quiz. Score 80% to clear a module.</li>
+          <li><strong class="text-blue">PRACTICE QUIZ</strong> — 10 random questions with instant explanations.
+              Unlimited retries, not recorded as your official result.</li>
+          <li><strong class="text-blue">FINAL EXAM</strong> — <span id="exam-count">30</span> questions drawn
+              from all categories. Explanations are withheld until you finish.</li>
+        </ul>
+      </div>
+
+      <div class="panel-inset">
+        <h2 class="text-yellow">SCORING</h2>
+        <ul class="tight" style="margin-top:12px">
+          <li>100 points per correct answer, plus a speed bonus for answering quickly.</li>
+          <li>Consecutive correct answers build a combo multiplier up to x3.</li>
+          <li>Select-all-that-apply questions are all-or-nothing — no partial credit.</li>
+          <li>Passing score: <strong class="text-green" id="exam-pass">80%</strong>.</li>
+          <li>Questions and answer options are randomized on every attempt.</li>
+        </ul>
+      </div>
+
+      <div class="panel-inset">
+        <h2 class="text-purple">CONTROLS</h2>
+        <ul class="tight" style="margin-top:12px">
+          <li>Click an answer, or press its letter key <strong>A</strong>–<strong>D</strong>.</li>
+          <li>Press <strong>Enter</strong> to submit, then <strong>Enter</strong> again to advance.</li>
+          <li>Everything is keyboard navigable. Motion can be disabled in Settings.</li>
+        </ul>
+      </div>
+
+      <p class="small dim">Estimated time: about <span id="exam-mins">18</span> minutes for the exam,
+      longer if you work through all modules first. Question bank: <span id="bank-count">55</span> questions.
+      Your progress is stored only in this browser — nothing is uploaded.</p>
+    </div>
+
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-green grow" data-go="modules">▶ PRESS START</button>
+      <button class="btn btn-ghost" data-go="home">HOME</button>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE SELECT ==================== -->
+  <section class="screen" id="screen-modules">
+    <div class="row-between" style="margin-bottom:20px">
+      <h1 class="text-blue">SELECT MODULE</h1>
+      <button class="btn btn-sm btn-ghost" data-go="home">HOME</button>
+    </div>
+    <div class="stack" id="module-list"></div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-yellow grow" data-go="home">BACK TO MENU</button>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE (learning cards) ==================== -->
+  <section class="screen" id="screen-module">
+    <div class="hud">
+      <div class="hud-cell">
+        <span class="hud-key">MODULE</span>
+        <span class="hud-val" id="module-title">—</span>
+      </div>
+      <div class="hud-cell">
+        <span class="hud-key">PROGRESS</span>
+        <span class="hud-val" id="module-step">—</span>
+      </div>
+    </div>
+
+    <div id="module-progress" style="margin-bottom:20px"></div>
+    <div class="panel panel-yellow" id="module-card"></div>
+
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-ghost" id="module-prev">◀ PREV</button>
+      <button class="btn btn-green grow" id="module-next">NEXT ▶</button>
+      <button class="btn btn-sm btn-ghost" data-go="modules">QUIT</button>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE COMPLETE ==================== -->
+  <section class="screen" id="screen-module-done">
+    <div class="panel panel-green center stack">
+      <div class="verdict is-pass" id="md-verdict">MODULE CLEARED</div>
+      <div class="pixel text-yellow" id="md-score" style="font-size:var(--fs-h2)">0 / 0</div>
+      <p id="md-note"></p>
+    </div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-green grow" data-go="modules">NEXT MODULE</button>
+      <button class="btn btn-yellow" id="md-retry">RETRY MODULE</button>
+      <button class="btn btn-ghost" data-go="home">HOME</button>
+    </div>
+  </section>
+
+  <!-- ==================== QUIZ ==================== -->
+  <section class="screen" id="screen-quiz">
+    <h1 class="text-yellow" id="quiz-heading" style="margin-bottom:16px">QUIZ</h1>
+
+    <div class="hud">
+      <div class="hud-cell"><span class="hud-key">SCORE</span><span class="hud-val" id="hud-score">0</span></div>
+      <div class="hud-cell"><span class="hud-key">QUESTION</span><span class="hud-val" id="hud-q">1 / 1</span></div>
+      <div class="hud-cell"><span class="hud-key">COMBO</span><span class="hud-val" id="hud-combo">x1.00</span></div>
+      <div class="hud-cell"><span class="hud-key">ACCURACY</span><span class="hud-val" id="hud-acc">0%</span></div>
+      <div class="hud-cell"><span class="hud-key">TIME</span><span class="hud-val" id="hud-time">--:--</span></div>
+    </div>
+
+    <div id="quiz-progress" style="margin-bottom:20px"></div>
+
+    <div class="panel">
+      <div id="quiz-question"></div>
+      <div id="quiz-feedback"></div>
+    </div>
+
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-green grow" id="quiz-submit">LOCK IT IN</button>
+      <button class="btn btn-yellow grow hidden" id="quiz-next">NEXT QUESTION</button>
+      <button class="btn btn-sm btn-red" id="quiz-quit">QUIT</button>
+    </div>
+  </section>
+
+  <!-- ==================== RESULTS ==================== -->
+  <section class="screen" id="screen-results">
+    <h1 class="text-yellow" id="res-heading" style="margin-bottom:20px">RESULTS</h1>
+
+    <div class="panel center stack" style="margin-bottom:20px">
+      <div class="score-huge" id="res-percent">0%</div>
+      <div class="verdict is-pass" id="res-verdict">PASS</div>
+      <div class="pixel text-purple" id="res-rank" style="font-size:var(--fs-label)">RANK</div>
+      <p id="res-note" class="small dim"></p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="stat-cell"><span class="label">CORRECT</span><span class="stat-val text-green" id="res-correct">0</span></div>
+      <div class="stat-cell"><span class="label">INCORRECT</span><span class="stat-val text-red" id="res-incorrect">0</span></div>
+      <div class="stat-cell"><span class="label">POINTS</span><span class="stat-val text-yellow" id="res-points">0</span></div>
+      <div class="stat-cell"><span class="label">TIME TAKEN</span><span class="stat-val" id="res-time">0m 00s</span></div>
+      <div class="stat-cell"><span class="label">GRADE</span><span class="stat-val text-purple" id="res-grade">—</span></div>
+      <div class="stat-cell"><span class="label">BEST STREAK</span><span class="stat-val" id="res-streak">0</span></div>
+    </div>
+
+    <div class="stack">
+      <button class="btn btn-block btn-red" id="res-review">REVIEW INCORRECT ANSWERS</button>
+      <button class="btn btn-block btn-green" id="res-cert">PRINT COMPLETION RECORD</button>
+      <div class="grid-2">
+        <button class="btn btn-block btn-yellow" id="res-retry">RETRY</button>
+        <button class="btn btn-block btn-ghost" data-go="home">RETURN HOME</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REVIEW ==================== -->
+  <section class="screen" id="screen-review">
+    <div class="row-between" style="margin-bottom:20px">
+      <h1 class="text-red" id="review-count">0 QUESTIONS MISSED</h1>
+      <button class="btn btn-sm btn-ghost" data-go="results">BACK</button>
+    </div>
+    <p class="small dim" style="margin-bottom:20px">Each explanation cites the rule it comes from. These are the
+    areas to revisit before your next attempt.</p>
+    <div id="review-list"></div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-yellow grow" data-go="results">BACK TO RESULTS</button>
+      <button class="btn btn-ghost" data-go="home">HOME</button>
+    </div>
+  </section>
+
+  <!-- ==================== GLOSSARY ==================== -->
+  <section class="screen" id="screen-glossary">
+    <div class="row-between" style="margin-bottom:20px">
+      <h1 class="text-purple">GLOSSARY</h1>
+      <button class="btn btn-sm btn-ghost" data-go="home">HOME</button>
+    </div>
+    <label class="sr-only" for="glossary-search">Search glossary terms</label>
+    <input class="input" id="glossary-search" type="search" placeholder="Search terms, definitions, examples…"
+           autocomplete="off" style="margin-bottom:20px">
+    <div id="glossary-list"></div>
+  </section>
+
+  <!-- ==================== ACHIEVEMENTS ==================== -->
+  <section class="screen" id="screen-achievements">
+    <div class="row-between" style="margin-bottom:20px">
+      <h1 class="text-yellow">ACHIEVEMENTS</h1>
+      <button class="btn btn-sm btn-ghost" data-go="home">HOME</button>
+    </div>
+    <div class="grid-2" id="achievement-grid"></div>
+  </section>
+
+  <!-- ==================== SETTINGS ==================== -->
+  <section class="screen" id="screen-settings">
+    <div class="row-between" style="margin-bottom:20px">
+      <h1 class="text-blue">SETTINGS</h1>
+      <button class="btn btn-sm btn-ghost" data-go="home">HOME</button>
+    </div>
+
+    <div class="panel" style="margin-bottom:20px">
+      <h2 class="text-yellow" style="margin-bottom:16px">YOUR DETAILS</h2>
+      <p class="small dim">Required on your completion record. HIPAA training logs must identify who was
+      trained and their role. This stays in your browser only.</p>
+      <div class="stack" style="margin-top:16px">
+        <div class="field">
+          <label class="label" for="learner-name">FULL NAME</label>
+          <input class="input" id="learner-name" type="text" autocomplete="name" placeholder="Jane Doe">
+        </div>
+        <div class="field">
+          <label class="label" for="learner-role">JOB TITLE / ROLE</label>
+          <input class="input" id="learner-role" type="text" autocomplete="organization-title"
+                 placeholder="Medical Records Clerk">
+        </div>
+        <button class="btn btn-green" id="save-learner">SAVE</button>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:20px">
+      <h2 class="text-yellow" style="margin-bottom:8px">PREFERENCES</h2>
+      <div class="toggle-row">
+        <span>Sound effects</span>
+        <button class="btn btn-sm btn-ghost" data-setting="sound" aria-pressed="false">OFF</button>
+      </div>
+      <div class="toggle-row">
+        <span>Animations</span>
+        <button class="btn btn-sm btn-green" data-setting="animations" aria-pressed="true">ON</button>
+      </div>
+      <div class="toggle-row">
+        <span>Show timer during quizzes</span>
+        <button class="btn btn-sm btn-ghost" data-setting="timer" aria-pressed="false">OFF</button>
+      </div>
+      <p class="small dim" style="margin-top:16px">Your system's “reduce motion” preference is always respected,
+      regardless of the Animations setting.</p>
+    </div>
+
+    <div class="panel panel-red">
+      <h2 class="text-red" style="margin-bottom:12px">DANGER ZONE</h2>
+      <p class="small dim">Erases module progress, scores, and achievements stored in this browser.</p>
+      <button class="btn btn-red btn-block" id="reset-progress" style="margin-top:16px">RESET ALL PROGRESS</button>
+    </div>
+  </section>
+
+  <!-- ==================== CERTIFICATE ==================== -->
+  <section class="screen" id="screen-certificate">
+    <div class="certificate">
+      <div class="cert-title">HIPAA ANNUAL COMPLIANCE TRAINING<br>CERTIFICATE OF COMPLETION</div>
+      <div>This certifies that</div>
+      <div class="cert-name" id="cert-name">—</div>
+      <div class="cert-meta">Role: <strong id="cert-role">—</strong></div>
+      <div class="cert-meta">has completed <strong id="cert-module">—</strong></div>
+      <div class="cert-meta">Assessment score: <strong id="cert-score">—</strong></div>
+      <div class="cert-meta">Date completed: <strong id="cert-date">—</strong></div>
+      <div class="cert-meta" style="margin-top:32px;font-size:15px;text-align:left;max-width:620px;margin-left:auto;margin-right:auto">
+        <strong>Attestation:</strong> I certify that I have completed this training, I understand my obligations
+        under the clinic's HIPAA policies, and I agree to abide by them.
+      </div>
+      <div class="cert-meta" style="margin-top:40px">
+        Signature: ______________________________&nbsp;&nbsp;&nbsp;Date: ______________
+      </div>
+      <div class="cert-meta" style="margin-top:32px;font-size:14px">
+        Retain this record for a minimum of six years (45 CFR § 164.530(j)(2)).<br>
+        Created By Sbas info LLC 2026
+      </div>
+    </div>
+
+    <div class="row no-print" style="margin-top:24px">
+      <button class="btn btn-green grow" id="cert-print">PRINT / SAVE AS PDF</button>
+      <button class="btn btn-ghost" data-go="results">BACK</button>
+      <button class="btn btn-ghost" data-go="home">HOME</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ---------- APP CONFIG ---------- -->
+<script>
+  /* Bump this when training content changes materially. HIPAA logs must tie
+     back to the specific version of the curriculum a learner completed. */
+  const APP_VERSION = "1.0.0";
+</script>
+
+<!-- ---------- DATA (edit these to change content) ---------- -->
+<script src="data/questions.js"></script>
+<script src="data/modules.js"></script>
+<script src="data/glossary.js"></script>
+
+<!-- ---------- APPLICATION ---------- -->
+<script src="js/storage.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+<!-- ---------- BROKEN-PATH GUARD ----------
+     This page needs its css/, js/, and data/ folders sitting beside it. If
+     index.html gets copied somewhere on its own — emailed, dragged to a
+     Desktop, saved out of a chat window — those relative paths break and the
+     page would otherwise render as an unstyled wall of text with no
+     explanation. This says so plainly instead. -->
+<script>
+(function () {
+  window.addEventListener("load", function () {
+    var cssLoaded = !!getComputedStyle(document.body)
+                      .getPropertyValue("--neon-blue").trim();
+    var jsLoaded  = typeof QUESTIONS !== "undefined" && typeof Quiz !== "undefined";
+    if (cssLoaded && jsLoaded) return;
+
+    var missing = [];
+    if (!cssLoaded) missing.push("css/");
+    if (!jsLoaded)  missing.push("js/ and data/");
+
+    var box = document.createElement("div");
+    box.setAttribute("style",
+      "position:fixed;inset:0;z-index:99999;background:#0a0a12;color:#eaeaf5;" +
+      "font:16px/1.6 system-ui,sans-serif;padding:40px;overflow:auto");
+    box.innerHTML =
+      '<div style="max-width:620px;margin:0 auto;border:4px solid #ff2d55;padding:28px">' +
+      '<h1 style="color:#ff2d55;font-size:20px;margin:0 0 16px">SUPPORT FILES NOT FOUND</h1>' +
+      '<p>This file could not load its <strong>' + missing.join("</strong> and <strong>") +
+      '</strong> folder(s), so the trainer cannot start.</p>' +
+      '<p>Almost always this means <code>index.html</code> was copied somewhere by ' +
+      'itself. It is not a standalone file — it needs the whole ' +
+      '<code>hipaa-hero</code> folder around it.</p>' +
+      '<p><strong>Two ways to fix it:</strong></p>' +
+      '<ul><li>Open <code>index.html</code> from inside the original ' +
+      '<code>hipaa-hero</code> folder, with <code>css</code>, <code>js</code>, and ' +
+      '<code>data</code> next to it.</li>' +
+      '<li>Or use <code>hipaa-hero-standalone.html</code>, which bundles everything ' +
+      'into one file and works from anywhere.</li></ul>' +
+      '</div>';
+    document.body.appendChild(box);
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+/* ============================================================================
+   HIPAA HERO — styles.css
+   Base reset, design tokens, layout scaffolding, typography.
+   Component skin lives in arcade.css. Motion lives in animations.css.
+   ============================================================================ */
+
+/* ---------- DESIGN TOKENS ---------- */
+:root {
+  /* Palette */
+  --bg:            #0a0a12;
+  --bg-panel:      #12121f;
+  --bg-panel-alt:  #1a1a2e;
+  --bg-inset:      #08080f;
+
+  --neon-blue:     #00e5ff;
+  --electric-green:#39ff14;
+  --bright-yellow: #ffe600;
+  --arcade-red:    #ff2d55;
+  --purple:        #b14aff;
+  --orange:        #ff8c00;
+
+  --text:          #eaeaf5;
+  --text-dim:      #9a9ab5;
+  --text-invert:   #0a0a12;
+
+  /* Structure */
+  --border-w:      4px;
+  --border-w-lg:   6px;
+  --shadow-hard:   6px 6px 0 rgba(0, 0, 0, 0.85);
+  --shadow-hard-sm:4px 4px 0 rgba(0, 0, 0, 0.85);
+
+  /* Rhythm */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  /* Type */
+  --font-pixel: "Press Start 2P", "Courier New", monospace;
+  --font-body:  "VT323", "Lucida Console", "Courier New", monospace;
+
+  --fs-title:  clamp(24px, 6vw, 56px);
+  --fs-h1:     clamp(16px, 3.2vw, 26px);
+  --fs-h2:     clamp(13px, 2.2vw, 17px);
+  --fs-label:  clamp(9px,  1.5vw, 12px);
+  --fs-body:   clamp(17px, 2.4vw, 21px);
+  --fs-small:  clamp(15px, 2vw, 18px);
+}
+
+/* ---------- RESET ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: none;
+  image-rendering: pixelated;
+  overflow-x: hidden;
+}
+
+button, input, select, textarea { font-family: inherit; color: inherit; }
+button { cursor: pointer; }
+
+/* Visible focus ring is mandatory — keyboard navigation is an a11y requirement */
+:focus-visible {
+  outline: var(--border-w) solid var(--bright-yellow);
+  outline-offset: 3px;
+}
+
+/* ---------- LAYOUT SCAFFOLD ---------- */
+.cabinet {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--sp-4) var(--sp-4) var(--sp-7);
+  position: relative;
+  z-index: 1;
+}
+
+.screen { display: none; }
+.screen.is-active { display: block; }
+
+.stack   { display: flex; flex-direction: column; gap: var(--sp-4); }
+.stack-sm{ display: flex; flex-direction: column; gap: var(--sp-2); }
+.row     { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.row-between { display: flex; flex-wrap: wrap; gap: var(--sp-3);
+               align-items: center; justify-content: space-between; }
+.grow    { flex: 1 1 auto; }
+.center  { text-align: center; }
+
+.grid-2 {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+.pixel { font-family: var(--font-pixel); line-height: 1.6; letter-spacing: 0.5px; }
+
+h1, h2, h3 { font-family: var(--font-pixel); line-height: 1.6; margin: 0; }
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-label); }
+
+p { margin: 0 0 var(--sp-3); }
+p:last-child { margin-bottom: 0; }
+
+.label {
+  font-family: var(--font-pixel);
+  font-size: var(--fs-label);
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.dim   { color: var(--text-dim); }
+.small { font-size: var(--fs-small); }
+
+.text-blue   { color: var(--neon-blue); }
+.text-green  { color: var(--electric-green); }
+.text-yellow { color: var(--bright-yellow); }
+.text-red    { color: var(--arcade-red); }
+.text-purple { color: var(--purple); }
+
+ul.tight { margin: 0; padding-left: 1.3em; }
+ul.tight li { margin-bottom: var(--sp-2); }
+ul.tight li:last-child { margin-bottom: 0; }
+
+/* ---------- UTILITY ---------- */
+.hidden { display: none !important; }
+
+/* Screen-reader-only text for announcements and unlabelled controls */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 640px) {
+  .cabinet { padding: var(--sp-3) var(--sp-3) var(--sp-6); }
+  .row-between { flex-direction: column; align-items: stretch; }
+}
+
+/* ---------- PRINT (certificate) ---------- */
+@media print {
+  body { background: #fff; color: #000; }
+  .crt-overlay, .no-print { display: none !important; }
+  .cabinet { max-width: none; padding: 0; }
+  .panel { box-shadow: none; }
+}
