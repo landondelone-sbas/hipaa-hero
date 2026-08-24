@@ -429,6 +429,19 @@
   color: var(--text-dim);
 }
 
+.sbas-mark {
+  height: 15px;
+  width: auto;
+  vertical-align: -2px;
+  opacity: 0.7;
+}
+
+.certificate .sbas-mark {
+  height: 13px;
+  vertical-align: -1px;
+  opacity: 0.85;
+}
+
 .logo-slot {
   display: inline-grid;
   place-items: center;
