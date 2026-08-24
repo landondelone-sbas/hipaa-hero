@@ -19,7 +19,7 @@ const Storage = (function () {
     progress: {
       modulesDone: [],    // module ids the learner has finished
       bestScore: 0,       // best final-exam percentage
-      bestPoints: 0,      // best arcade point total
+      bestPoints: 0,      // best point total
       lastAttempt: null,  // ISO timestamp
       highestStreak: 0,
       attempts: 0,

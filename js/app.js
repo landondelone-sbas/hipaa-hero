@@ -56,14 +56,14 @@
     const learner = Storage.learner();
 
     $("#home-status").textContent = p.passed
-      ? "STATUS: COMPLIANT — PASSED " + UI.formatDate(p.passedOn)
-      : "STATUS: TRAINING INCOMPLETE";
+      ? "Compliant — passed " + UI.formatDate(p.passedOn)
+      : "Training incomplete";
     $("#home-status").className = "pixel " + (p.passed ? "text-green" : "text-yellow");
 
     $("#home-modules").textContent = p.modulesDone.length + " / " + MODULES.length;
     $("#home-best").textContent    = p.bestScore + "%";
     $("#home-points").textContent  = p.bestPoints.toLocaleString();
-    $("#home-name").textContent    = learner.name || "GUEST";
+    $("#home-name").textContent    = learner.name || "Guest";
   }
 
   /* ---------- MODULE SELECT ---------- */
@@ -77,7 +77,7 @@
         type: "button",
         onClick: function () { UI.sound.click(); startModule(m); }
       }, [
-        el("div", { className: "module-num", text: "MODULE " + m.n + (done ? "   ✓ COMPLETE" : "") }),
+        el("div", { className: "module-num", text: "Module " + m.n + (done ? "   ✓ Complete" : "") }),
         el("div", { className: "module-title", text: m.title }),
         el("div", { className: "small dim", text: m.blurb })
       ]);
@@ -98,8 +98,8 @@
     const card = m.cards[App.cardIndex];
     const last = App.cardIndex === m.cards.length - 1;
 
-    $("#module-title").textContent = "MODULE " + m.n + " — " + m.title;
-    $("#module-step").textContent  = "CARD " + (App.cardIndex + 1) + " / " + m.cards.length;
+    $("#module-title").textContent = "Module " + m.n + " — " + m.title;
+    $("#module-step").textContent  = "Card " + (App.cardIndex + 1) + " / " + m.cards.length;
 
     UI.fill($("#module-progress"),
       UI.renderBar(Math.round(((App.cardIndex + 1) / m.cards.length) * 100)));
@@ -112,7 +112,7 @@
     ]);
 
     $("#module-prev").disabled = App.cardIndex === 0;
-    $("#module-next").textContent = last ? "TAKE MINI QUIZ" : "NEXT";
+    $("#module-next").textContent = last ? "Take Mini Quiz" : "Next";
   }
 
   function moduleNext() {
@@ -142,9 +142,9 @@
     });
 
     $("#quiz-heading").textContent =
-      mode === "exam"   ? "FINAL EXAM" :
-      mode === "module" ? "MINI QUIZ — " + App.module.title :
-                          "PRACTICE ROUND";
+      mode === "exam"   ? "Final Exam" :
+      mode === "module" ? "Mini Quiz — " + App.module.title :
+                          "Practice Round";
 
     startTimer();
     renderQuizStep();
@@ -188,10 +188,9 @@
       onToggle:    toggleAnswer
     });
 
-    const multi = Quiz.isMulti(q);
     $("#quiz-submit").classList.toggle("hidden", false);
     $("#quiz-submit").disabled = App.selection.length === 0;
-    $("#quiz-submit").textContent = multi ? "SUBMIT ANSWER" : "LOCK IT IN";
+    $("#quiz-submit").textContent = "Submit Answer";
     $("#quiz-next").classList.add("hidden");
   }
 
@@ -239,7 +238,7 @@
 
     $("#quiz-submit").classList.add("hidden");
     $("#quiz-next").classList.remove("hidden");
-    $("#quiz-next").textContent = Quiz.isLast(s) ? "SEE RESULTS" : "NEXT QUESTION";
+    $("#quiz-next").textContent = Quiz.isLast(s) ? "See Results" : "Next Question";
 
     if (s.instant) {
       // Practice and module quizzes teach on the spot.
@@ -286,7 +285,7 @@
       // A module counts as complete once its mini quiz is passed.
       if (r.percent >= Quiz.CONFIG.passMark) {
         Storage.completeModule(App.module.id);
-        UI.toast("MODULE COMPLETE: " + App.module.title);
+        UI.toast("Module complete: " + App.module.title);
       }
       checkAchievements(r, "module");
       renderModuleResult(r);
@@ -302,21 +301,21 @@
 
   function renderModuleResult(r) {
     const passed = r.percent >= Quiz.CONFIG.passMark;
-    $("#md-verdict").textContent = passed ? "MODULE CLEARED" : "REVIEW NEEDED";
+    $("#md-verdict").textContent = passed ? "Module Complete" : "Review Needed";
     $("#md-verdict").className   = "verdict " + (passed ? "is-pass" : "is-fail");
     $("#md-score").textContent   = r.correct + " / " + r.total + "  (" + r.percent + "%)";
     $("#md-note").textContent    = passed
       ? "Nicely done. Move on to the next module, or take a practice round."
       : "You need " + Quiz.CONFIG.passMark + "% to clear a module. Review the cards and try again.";
-    $("#md-retry").textContent = passed ? "REPLAY MODULE" : "RETRY MODULE";
+    $("#md-retry").textContent = passed ? "Replay Module" : "Retry Module";
   }
 
   function renderResults(r) {
     const isExam = App.mode === "exam";
 
-    $("#res-heading").textContent = isExam ? "FINAL EXAM RESULTS" : "PRACTICE RESULTS";
+    $("#res-heading").textContent = isExam ? "Final Exam Results" : "Practice Results";
     $("#res-percent").textContent = r.percent + "%";
-    $("#res-verdict").textContent = isExam ? (r.passed ? "PASS" : "FAIL") : "PRACTICE COMPLETE";
+    $("#res-verdict").textContent = isExam ? (r.passed ? "Pass" : "Fail") : "Practice Complete";
     $("#res-verdict").className   = "verdict " + (r.passed || !isExam ? "is-pass" : "is-fail");
 
     $("#res-correct").textContent   = r.correct;
@@ -371,7 +370,7 @@
       const a = UI.achievementById(id);
       setTimeout(function () {
         UI.sound.unlock();
-        UI.toast("ACHIEVEMENT UNLOCKED — " + a.name);
+        UI.toast("Achievement unlocked — " + a.name);
       }, 500 + i * 900);
     });
   }
@@ -492,7 +491,7 @@
 
     $("#save-learner").addEventListener("click", function () {
       Storage.setLearner($("#learner-name").value, $("#learner-role").value);
-      UI.toast("SAVED");
+      UI.toast("Saved");
       renderHome();
     });
 
@@ -505,7 +504,7 @@
       renderAchievements();
       $("#learner-name").value = "";
       $("#learner-role").value = "";
-      UI.toast("PROGRESS RESET");
+      UI.toast("Progress reset");
     });
 
     document.addEventListener("keydown", onKeydown);

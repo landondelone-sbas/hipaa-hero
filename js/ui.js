@@ -10,14 +10,14 @@ const UI = (function () {
      Declared here because they are presentation metadata. The unlock
      conditions are evaluated in app.js where the results are known. */
   const ACHIEVEMENTS = [
-    { id: "rookie",    icon: "✦", name: "HIPAA ROOKIE",         desc: "Finish your first training module." },
-    { id: "scholar",   icon: "◆", name: "MODULE SCHOLAR",       desc: "Complete all ten training modules." },
-    { id: "privacy",   icon: "▲", name: "PRIVACY PROTECTOR",    desc: "Score 90% or higher on the final exam." },
-    { id: "security",  icon: "■", name: "SECURITY SPECIALIST",  desc: "Pass the final exam." },
-    { id: "perfect",   icon: "★", name: "PERFECT SCORE",        desc: "Answer every exam question correctly." },
-    { id: "fast",      icon: "⚡", name: "FAST LEARNER",         desc: "Pass the exam in under six minutes." },
-    { id: "streak",    icon: "●", name: "COMBO MASTER",         desc: "Build a streak of ten correct answers." },
-    { id: "champion",  icon: "♛", name: "COMPLIANCE CHAMPION",  desc: "All modules done and the exam passed." }
+    { id: "rookie",    icon: "✦", name: "HIPAA Rookie",         desc: "Finish your first training module." },
+    { id: "scholar",   icon: "◆", name: "Module Scholar",       desc: "Complete all ten training modules." },
+    { id: "privacy",   icon: "▲", name: "Privacy Protector",    desc: "Score 90% or higher on the final exam." },
+    { id: "security",  icon: "■", name: "Security Specialist",  desc: "Pass the final exam." },
+    { id: "perfect",   icon: "★", name: "Perfect Score",        desc: "Answer every exam question correctly." },
+    { id: "fast",      icon: "⚡", name: "Fast Learner",         desc: "Pass the exam in under six minutes." },
+    { id: "streak",    icon: "●", name: "Combo Master",         desc: "Build a streak of ten correct answers." },
+    { id: "champion",  icon: "♛", name: "Compliance Champion",  desc: "All modules done and the exam passed." }
   ];
 
   /* ---------- DOM HELPERS ---------- */
@@ -120,7 +120,7 @@ const UI = (function () {
   function burst(target) {
     if (document.body.classList.contains("no-motion")) return;
     const rect = target.getBoundingClientRect();
-    const colors = ["var(--electric-green)", "var(--bright-yellow)", "var(--neon-blue)"];
+    const colors = ["var(--electric-green)", "var(--bright-yellow)", "var(--neon-blue)", "var(--orange)"];
     for (let i = 0; i < 8; i++) {
       const p = el("div", { className: "burst" });
       p.style.background = colors[i % colors.length];
@@ -155,8 +155,8 @@ const UI = (function () {
   }
 
   function typeLabel(q) {
-    return { mc: "MULTIPLE CHOICE", tf: "TRUE / FALSE",
-             multi: "SELECT ALL THAT APPLY", scenario: "SCENARIO" }[q.type] || "QUESTION";
+    return { mc: "Multiple Choice", tf: "True / False",
+             multi: "Select All That Apply", scenario: "Scenario" }[q.type] || "Question";
   }
 
   /**
@@ -227,7 +227,7 @@ const UI = (function () {
       className: "feedback" + (correct ? "" : " is-wrong"),
       role: "status"
     }, [
-      el("div", { className: "feedback-head", text: correct ? "CORRECT!" : "NOT QUITE" }),
+      el("div", { className: "feedback-head", text: correct ? "Correct!" : "Not quite" }),
       el("p", { text: q.explanation }),
       el("div", { className: "feedback-ref", text: "Source: " + q.reference })
     ]);
@@ -257,7 +257,7 @@ const UI = (function () {
       const on = unlockedIds.indexOf(a.id) !== -1;
       return el("div", { className: "badge" + (on ? " is-unlocked" : "") }, [
         el("div", { className: "badge-icon", text: a.icon, "aria-hidden": "true" }),
-        el("div", { className: "badge-name", text: on ? a.name : "LOCKED" }),
+        el("div", { className: "badge-name", text: on ? a.name : "Locked" }),
         el("div", { className: "badge-desc", text: a.desc })
       ]);
     });
@@ -279,11 +279,11 @@ const UI = (function () {
     return el("div", { className: "review-item" }, [
       el("div", { className: "review-q", text: q.question }),
       el("div", { className: "review-line" }, [
-        el("span", { className: "text-red", text: "YOUR ANSWER: " }),
+        el("span", { className: "text-red", text: "Your answer: " }),
         el("span", { text: chosen })
       ]),
       el("div", { className: "review-line" }, [
-        el("span", { className: "text-green", text: "CORRECT: " }),
+        el("span", { className: "text-green", text: "Correct: " }),
         el("span", { text: right })
       ]),
       el("p", { className: "small", text: q.explanation, style: "margin-top:12px" }),
@@ -308,7 +308,7 @@ const UI = (function () {
 
     fill(container, entries.map(function (g) {
       return el("div", { className: "glossary-entry" }, [
-        el("div", { className: "glossary-term", text: g.term.toUpperCase() }),
+        el("div", { className: "glossary-term", text: g.term }),
         el("p", { text: g.definition }),
         el("p", { className: "small dim", text: "Example: " + g.example }),
         el("div", { className: "small", style: "margin-top:8px" }, [

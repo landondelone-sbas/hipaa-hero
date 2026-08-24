@@ -1,8 +1,8 @@
-# HIPAA HERO — Retro Arcade Annual Compliance Trainer
+# HIPAA HERO — Annual Compliance Trainer
 
 A fully static, browser-based HIPAA compliance trainer for clinic staff. No backend, no database, no login, no build step. Open `index.html` and it runs.
 
-**Created By Sbas info LLC 2026**
+**Created by SBAS.info LLC · 2026**
 
 ---
 
@@ -40,7 +40,7 @@ hipaa-hero-standalone.html   Generated single-file build (see Quick start)
 build-standalone.js          Optional; regenerates the file above
 css/
   styles.css                 Reset, design tokens, layout, typography
-  arcade.css                 The 8-bit skin: panels, buttons, HUD, tiles, badges
+  theme.css                  The visual skin: panels, buttons, HUD, tiles, badges
   animations.css             All motion, plus the reduced-motion kill switches
 js/
   storage.js                 Every localStorage read/write

@@ -171,12 +171,12 @@ const Quiz = (function () {
   }
 
   function gradeFor(percent) {
-    if (percent === 100) return { grade: "S", rank: "COMPLIANCE CHAMPION" };
-    if (percent >= 90)   return { grade: "A", rank: "PRIVACY PROTECTOR" };
-    if (percent >= 80)   return { grade: "B", rank: "SECURITY SPECIALIST" };
-    if (percent >= 70)   return { grade: "C", rank: "HIPAA ROOKIE" };
-    if (percent >= 60)   return { grade: "D", rank: "NEEDS REVIEW" };
-    return { grade: "F", rank: "RETRY REQUIRED" };
+    if (percent === 100) return { grade: "S", rank: "Compliance Champion" };
+    if (percent >= 90)   return { grade: "A", rank: "Privacy Protector" };
+    if (percent >= 80)   return { grade: "B", rank: "Security Specialist" };
+    if (percent >= 70)   return { grade: "C", rank: "HIPAA Rookie" };
+    if (percent >= 60)   return { grade: "D", rank: "Needs Review" };
+    return { grade: "F", rank: "Retry Required" };
   }
 
   /** Final tally. Safe to call more than once. */
